@@ -3,9 +3,9 @@ import functools
 
 
 def with_db_connection(func):
-    @functools.wraps(func)
+    #@functools.wraps(func)
     def wrapper(*args, **kwargs):
-        conn = sqlite3.connect(r"C:\Users\nyemi\users.db")  # Change path if needed
+        conn = sqlite3.connect(r"C:\Users\nyemi\Desktop\ALX_current\alx-backend-python\python-decorators-0x01\users.db")  # Change path if needed
         try:
             return func(conn, *args, **kwargs)
         finally:
@@ -15,8 +15,8 @@ def with_db_connection(func):
 @with_db_connection 
 def get_user_by_id(conn, user_id): 
     cursor = conn.cursor() 
-    cursor.execute("SELECT * FROM users WHERE id = ?", (user_id,)) 
-    return cursor.fetchone() 
+    cursor.execute("SELECT id, email FROM users WHERE id = ?", (user_id,)) 
+    return cursor.fetchall() 
 #### Fetch user by ID with automatic connection handling 
 
 user = get_user_by_id(user_id=1)

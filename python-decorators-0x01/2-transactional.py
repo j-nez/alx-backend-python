@@ -1,11 +1,13 @@
 import sqlite3
 import functools
 
+#update_user_email = with_db_connection(transactional(update_user_name)) -> returns wrapper in with_db_connection function
+
 # Decorator to open and close DB connection
 def with_db_connection(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        conn = sqlite3.connect(r"C:\Users\nyemi\users.db")  # Adjust the path as needed
+        conn = sqlite3.connect(r"C:\Users\nyemi\Desktop\ALX_current\alx-backend-python\python-decorators-0x01\users.db")  # Adjust the path as needed
         try:
             return func(conn, *args, **kwargs)
         finally:
@@ -25,12 +27,16 @@ def transactional(func):
             raise e
     return wrapper
 
+#update_user_email = with_db_connection(transactional(update_user_name)) -> returns wrapper in with_db_connection function
 # Function to update email inside a transaction and connection context
 @with_db_connection
 @transactional
 def update_user_email(conn, user_id, new_email):
     cursor = conn.cursor()
     cursor.execute("UPDATE users SET email = ? WHERE id = ?", (new_email, user_id))
+ 
 
 # Run the function
-update_user_email(user_id=1, new_email="new_email@example.com")
+update_user_email(user_id=1, new_email="changed@example.com")
+
+

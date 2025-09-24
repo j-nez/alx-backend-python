@@ -2,13 +2,14 @@ import time
 import sqlite3
 import functools
 
+
 #### with_db_connection decorator
 def with_db_connection(func):
     @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        conn = sqlite3.connect(r"C:\Users\nyemi\users.db")  # Adjust the path as needed
+    def wrapper():
+        conn = sqlite3.connect(r"C:\Users\nyemi\Desktop\ALX_current\alx-backend-python\python-decorators-0x01\users.db")  # Adjust the path as needed
         try:
-            return func(conn, *args, **kwargs)
+            return func(conn)
         finally:
             conn.close()
     return wrapper
@@ -29,16 +30,17 @@ def retry_on_failure(retries=3, delay=2):
                         time.sleep(delay)
                     else:
                         print("All retries failed.")
-                        raise
+                        raise 
         return wrapper
     return decorator
 
+#fetch_users_with_retry = with_db_connection(retry_on_failure(retries=3, delay=2)(fetch_users_with_retry)) -> returns wrapper in with_db_connection function
 #### decorated function
 @with_db_connection
 @retry_on_failure(retries=3, delay=1)
 def fetch_users_with_retry(conn):
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM users")
+    cursor.execute("SELECT gender FROM users")
     return cursor.fetchall()
 
 #### run

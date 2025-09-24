@@ -8,7 +8,7 @@ query_cache = {}
 def with_db_connection(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        conn = sqlite3.connect(r"C:\Users\nyemi\users.db")  # Adjust path if needed
+        conn = sqlite3.connect(r"C:\Users\nyemi\Desktop\ALX_current\alx-backend-python\python-decorators-0x01\users.db")  # Adjust path if needed
         try:
             return func(conn, *args, **kwargs)
         finally:
@@ -39,7 +39,15 @@ def fetch_users_with_cache(conn, query):
     return cursor.fetchall()
 
 #### First call will cache the result
+start = time.time()
 users = fetch_users_with_cache(query="SELECT * FROM users")
+end = time.time()     # record end time
+print(f"Execution time without cache: {end - start:.6f} seconds")
+print(users)
 
 #### Second call will use the cached result
+start = time.time()
 users_again = fetch_users_with_cache(query="SELECT * FROM users")
+end = time.time()     # record end time
+print(f"Execution time with cache: {end - start:.6f} seconds")
+print(users_again)
