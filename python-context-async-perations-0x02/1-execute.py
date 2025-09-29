@@ -1,5 +1,6 @@
 import sqlite3
-
+""" create a reusable context manager that takes a query as input and executes it, managing both connection and the query execution
+"""
 class ExecuteQuery:
     def __init__(self, db_path, query, params=None):
         self.db_path = db_path
@@ -28,6 +29,6 @@ class ExecuteQuery:
 query = "SELECT * FROM users WHERE age > ?"
 params = (25,)
 
-with ExecuteQuery(r"C:\Users\nyemi\users.db", query, params) as results:
+with ExecuteQuery(r"users.db", query, params) as results:
     for row in results:
         print(row)

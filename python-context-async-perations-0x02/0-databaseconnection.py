@@ -1,5 +1,5 @@
 import sqlite3
-
+"""create a class based context manager to handle opening and closing database connections automatically"""
 class DatabaseConnection:
     def __init__(self, db_path):
         self.db_path = db_path
@@ -16,12 +16,10 @@ class DatabaseConnection:
             self.conn.close()
 
 # Usage of the context manager
-db_path = r"C:\Users\nyemi\users.db"  # Update path if needed
+db_path = r"C:\Users\nyemi\Desktop\ALX_current\alx-backend-python\python-decorators-0x01\users.db"  # Update path if needed
 
 with DatabaseConnection(db_path) as conn:
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM users")
     results = cursor.fetchall()
-
-    for row in results:
-        print(row)
+print(results)

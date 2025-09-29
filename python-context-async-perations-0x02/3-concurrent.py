@@ -1,6 +1,8 @@
 import aiosqlite
 import asyncio
 
+"""create a reusable context manager that takes a query as input and executes it, managing both connection and the query execution"""
+
 DB_PATH = "users.db"  # adjust the path if needed
 
 # Fetch all users
@@ -25,9 +27,10 @@ async def async_fetch_older_users():
 
 # Concurrent execution
 async def fetch_concurrently():
+    5
     await asyncio.gather(
         async_fetch_users(),
-        async_fetch_older_users()
+        async_fetch_older_users(),
     )
 
 # Run the event loop
