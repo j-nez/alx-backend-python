@@ -3,6 +3,7 @@
 
 # Optional: ignore SQLite databases
 *.db
+db.*
 
 # Optional: ignore Python bytecode and virtual environments
 __pycache__/
