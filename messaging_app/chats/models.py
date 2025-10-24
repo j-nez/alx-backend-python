@@ -8,7 +8,7 @@ class User(AbstractUser):
         HOST = 'host', 'Host'
         ADMIN = 'admin', 'Admin'
 
-    userid = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     #first_name = models.CharField(max_length=20)
     #last_name = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
@@ -23,7 +23,7 @@ class Message(models.Model):
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, 
     related_name='sent_messages')
     message_body = models.TextField()
-    sent_At = models.DateTimeField(auto_now_add=True)
+    sent_at = models.DateTimeField(auto_now_add=True)
 
 class Conversation(models.Model):
     conversation_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
