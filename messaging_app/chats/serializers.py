@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from models import Message, Conversation
+from .models import Message, Conversation
 
 User = get_user_model()
 
@@ -18,7 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
             'created_at',
         ]
 
-class MessageSerilaizer(serializers.ModelSerializer):
+class MessageSerializer(serializers.ModelSerializer):
     sender = UserSerializer(read_only=True)
     class Meta:
         model = Message
