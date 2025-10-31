@@ -1,44 +1,51 @@
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
-from .models import Message, Conversation
-
-User = get_user_model()
+from .models import *
+from django.contrib.auth.hashers import make_password
 
 class UserSerializer(serializers.ModelSerializer):
+    confirm_password = serializers.CharField(write_only=True) #not part of model fields
     class Meta:
         model = User
-        fields = [
-            'user_id',    # UUID primary key
-            'username',
-            'first_name',
-            'last_name',
-            'email',
-            'phone_number',
-            'role',
-            'created_at',
-        ]
+        fields = __all__
+        extra_kwargs = {"password": {"write_only": True}} #allows auto generation of password and applies the write only contraint
 
-class MessageSerializer(serializers.ModelSerializer):
-    sender = UserSerializer(read_only=True)
+    #object level validation for password typing reduncancy
+    def validate(self, data):
+        if data["password"] != data["confirm_password"]:
+            raise.serializers.ValidationError("Password does not match")
+        data.pop("confirm_password")
+        return super().validate(data) #DRF validation sequence is continued
+    
+    #hashing passaword and replacing it in vlaidated data
+    def create(Self, validated_data):
+        password = validated_data.get("password")
+        validated_data["password"] = make_password(password)
+
+        return super().create(validated_data) #DRF CRUD is continued
+
+class MessagesSerializer(serializers.ModelSerializer):
+    #with this there is no need  for nested serializtion but you lose accesst to all the user details in a get request
+    sender_id = serializers.PrimaryKeyRelatedField(queryset = User.objects.all(), source ="sender_id", write_only=True)
     class Meta:
         model = Message
         fields = [
             'message_id',
-            'sender',
+            'sender_id',
             'message_body',
             'sent_at',
         ]
-
+    def validate_message_body(self, body): 
+        if len(body.strip()) == 0:
+            raise serializers.ValidateError("Message body can not be empty")
+        return body
 
 class ConversationSerializer(serializers.ModelSerializer):
-    participants = UserSerializer(many=True, read_only=True)
-    messages = MessageSerializer(many=True, read_only=True)
+    participant = serializers.SerializerMethodField() #read only field
+    participant_id = serilaizers.PrimaryKeyRelatedField(queryset = User.objects.all(), write_only = True)
 
     class Meta:
         model = Conversation
-        fields = [
-            'conversation_id',
-            'participants',
-            'messages',
-            'created_at',
-        ]
+        fields = __all__
+    def get_participant(self, obj):
+
+        return [user.username for user in obj.participants_id.all()]

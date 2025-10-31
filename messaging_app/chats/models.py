@@ -18,12 +18,12 @@ class User(AbstractUser):
 
 class Message(models.Model):
     message_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, 
+    sender_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, 
     related_name='sent_messages')
     message_body = models.TextField()
     sent_at = models.DateTimeField(auto_now_add=True)
 
 class Conversation(models.Model):
     conversation_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    participants = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name ='coversations')
+    participant_id = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name ='coversations')
     created_at = models.DateTimeField(auto_now_add=True)
